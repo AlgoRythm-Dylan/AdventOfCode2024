@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace day3
 {
@@ -18,10 +17,7 @@ namespace day3
             foreach (var match in regex.EnumerateMatches(text))
             {
                 var instruction = text.Substring(match.Index, match.Length);
-                var split = instruction.Split(',');
-                var lhs = int.Parse(split[0].Replace("mul(", ""));
-                var rhs = int.Parse(split[1].Replace(")", ""));
-                total += (uint)lhs * (uint)rhs;
+                total += CalculateMult(instruction);
             }
             Console.WriteLine($"Total: {total}");
         }
@@ -66,13 +62,17 @@ namespace day3
                 else if(instruction.Type == InstructionType.Mul && countingEnabled)
                 {
                     var math = text.Substring((int)instruction.Index, (int)instruction.Length);
-                    var split = math.Split(',');
-                    var lhs = int.Parse(split[0].Replace("mul(", ""));
-                    var rhs = int.Parse(split[1].Replace(")", ""));
-                    total += (uint)lhs * (uint)rhs;
+                    total += CalculateMult(math);
                 }
             }
             Console.WriteLine($"Total of muls with enable/disable: {total}");
+        }
+        static uint CalculateMult(string input)
+        {
+            var split = input.Split(',');
+            var lhs = int.Parse(split[0].Replace("mul(", ""));
+            var rhs = int.Parse(split[1].Replace(")", ""));
+            return (uint)lhs * (uint)rhs;
         }
     }
 }
